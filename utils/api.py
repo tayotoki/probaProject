@@ -301,4 +301,69 @@ class Suop_api():
         result_delete = HttpMethod.delete(delete_vm_url)
         return result_delete
 
+
+    @staticmethod
+    def get_suop_monitoring_services(get_token):
+        cluster_id = get_token
+        get_monitoring_services_resourse = f"monitoring-services?cluster_id={cluster_id}"
+        get_monitoring_services_url = base_url + get_monitoring_services_resourse  # https://kuberpanel-be-test.dtln.cloud/suop/monitoring-services?cluster_id=252
+        print("Сформированный URL для запроса: " + get_monitoring_services_url)
+        result_get = HttpMethod.get(get_monitoring_services_url)
+        result_get.encoding = 'utf-8'
+        print(line)
+        print("Полученный результат: ")
+        pprint(result_get.json())
+        return result_get
+
+    @staticmethod
+    def get_suop_notifications(get_token):
+        cluster_id = get_token
+        get_notifications_resourse = f"notifications?cluster_id={cluster_id}"
+        get_notifications_url = base_url + get_notifications_resourse #https://kuberpanel-be-test.dtln.cloud/suop/notifications?cluster_id=252
+        print("Сформированный URL для запроса: " + get_notifications_url)
+        result_get = HttpMethod.get(get_notifications_url)
+        result_get.encoding = 'utf-8'
+        print(line)
+        print("Полученный результат: ")
+        pprint(result_get.json())
+        return result_get
+
+    @staticmethod
+    def get_suop_platforms():
+        get_platforms_resourse = "platforms"
+        get_platforms_url = base_url + get_platforms_resourse #https://kuberpanel-be-test.dtln.cloud/suop/platforms
+        print("Сформированный URL для запроса: " + get_platforms_url)
+        result_get = HttpMethod.get(get_platforms_url)
+        result_get.encoding = 'utf-8'
+        print(line)
+        print("Полученный результат: ")
+        pprint(result_get.json())
+        return result_get
+
+    @staticmethod
+    def get_suop_persistent_volumes(get_token):
+        cluster_id = get_token
+        get_persistent_volumes_resourse = f"persistent-volumes?cluster_id={cluster_id}"
+        get_persistent_volumes_url = base_url + get_persistent_volumes_resourse #https://kuberpanel-be-test.dtln.cloud/suop/persistent-volumes?cluster_id=252
+        print("Сформированный URL для запроса: " + get_persistent_volumes_url)
+        result_get = HttpMethod.get(get_persistent_volumes_url)
+        result_get.encoding = 'utf-8'
+        print(line)
+        print("Полученный результат: ")
+        pprint(result_get.json())
+        return result_get
+
     """ Черновик """
+
+    @staticmethod  # success
+    def get_suop_clusters_id(get_token):
+        cluster_id = get_token
+        get_cluster_resourse = f"clusters/{cluster_id}"
+        get_cluster_url = base_url + get_cluster_resourse
+        print("Сформированный URL для запроса: " + get_cluster_url)
+        result_get = HttpMethod.get(get_cluster_url)
+        result_get.encoding = 'utf-8'
+        print(line)
+        print("Полученный результат: ")
+        pprint(result_get.json())
+        return result_get

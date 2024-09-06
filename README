@@ -1,3 +1,16 @@
 Для установки библиотек:
 1. Открыть терминал.
 2. Вполнить команду pip install -r requirements.txt
+
+Инструкция для GitHub:
+https://translated.turbopages.org/proxy_u/en-ru.ru.bee8c175-66d9bb47-fc5c13cb-74722d776562/https/stackoverflow.com/questions/17291995/push-existing-project-into-github
+
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin <project url>
+git push -f origin develop
+В дальнейшем к выполнению достаточно последней команды.
+
+При возникновении ошибки SSL протокола:
+git config --global http.sslVerify false
