@@ -1,13 +1,8 @@
-import json
-import time
-import pytest
-
-
-
-from utils.api import Suop_api
+from .conftest import get_suop_api
 from utils.checking import Checking
-from .conftest import get_token
 from utils.httpmethod import HttpMethod
+
+Suop_api = get_suop_api()
 
 
 def test_get_cluster(get_token):
@@ -28,8 +23,9 @@ def test_get_cluster(get_token):
     # print(list(token))
 
 
-""" Тест-кейс persistent_volumes"""
 def test_get_persistent_volumes(get_token):
+    """ Тест-кейс persistent_volumes"""
+
     print("*****  Проверка получения persistent_volumes  *****")
     result_get_persistent_volumes = Suop_api.get_suop_persistent_volumes(get_token)
     Checking.check_status_code(result_get_persistent_volumes, 200)

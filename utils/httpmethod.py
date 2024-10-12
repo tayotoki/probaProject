@@ -4,65 +4,64 @@ from pathlib import Path
 import certifi
 import requests
 
+from .config import configure_or_get_config
 
-"""Список HTTP методов"""
+
 class HttpMethod:
+    """Список HTTP методов"""
 
-    fr = open('tests/auth_token.txt', 'r')
-    token = fr.read()
-    headers = {'Authorization': token}
+    def __new__(cls, *args, **kwargs):
+        cls.headers = cls.get_token()
 
-    data_post_nfsvm = {"nfs_capacity": 50}
-    data_patch_nfsvm = {"nfs_capacity": 51}
+        cls.data_post_nfsvm = {"nfs_capacity": 50}
+        cls.data_patch_nfsvm = {"nfs_capacity": 51}
 
-    data_post_infinidat_share = {
-  "infinidat_filesystem_size": 7,
-  "infinidat_filesystem_ip": "10.231.9.158",
-  "infinidat_nfs_network": "10.231.16.80/28"
-}
-    data_patch_infinidat_share = {
-  "infinidat_filesystem_size": 8
-}
+        cls.data_post_infinidat_share = {
+            "infinidat_filesystem_size": 7,
+            "infinidat_filesystem_ip": "10.231.9.158",
+            "infinidat_nfs_network": "10.231.16.80/28"
+        }
+        cls.data_patch_infinidat_share = {
+            "infinidat_filesystem_size": 8
+        }
+        return super().__new__(cls)
 
     @staticmethod
-    def get(url):
-        result = requests.get(url, headers=HttpMethod.headers, verify=certifi.where())
+    def get_token():
+        token = (
+            configure_or_get_config()
+            .get("jwt_token", "")
+        )
+        headers = {'Authorization': token}
+        return headers
+
+    def get(self, url):
+        result = requests.get(url, headers=self.headers, verify=certifi.where())
         return result
 
-    """=============================================================================================="""
-    @staticmethod
-    def patch(url):
-        result = requests.patch(url, headers=HttpMethod.headers, verify=certifi.where())
+    def patch(self, url):
+        result = requests.patch(url, headers=self.headers, verify=certifi.where())
         return result
 
-    @staticmethod
-    def patch_nvsvm(url):
-        result = requests.patch(url, headers=HttpMethod.headers, data=HttpMethod.data_patch_nfsvm, verify=certifi.where())
+    def patch_nvsvm(self, url):
+        result = requests.patch(url, headers=self.headers, data=self.data_patch_nfsvm, verify=certifi.where())
         return result
 
-    @staticmethod
-    def patch_infinidat_share(url):
-        result = requests.patch(url, headers=HttpMethod.headers, data=HttpMethod.data_patch_infinidat_share, verify=certifi.where())
+    def patch_infinidat_share(self, url):
+        result = requests.patch(url, headers=self.headers, data=self.data_patch_infinidat_share, verify=certifi.where())
+
+    def post_nfsvm(self, url):
+        result = requests.post(url, headers=self.headers, data=self.data_post_nfsvm, verify=certifi.where())
         return result
 
-    """=============================================================================================="""
-    @staticmethod
-    def post_nfsvm(url):
-        result = requests.post(url, headers=HttpMethod.headers, data=HttpMethod.data_post_nfsvm, verify=certifi.where())
+    def post(self, url):
+        result = requests.post(url, headers=self.headers, verify=certifi.where())
         return result
 
-    @staticmethod
-    def post(url):
-        result = requests.post(url, headers=HttpMethod.headers, verify=certifi.where())
+    def post_infinidat_share(self, url):
+        result = requests.post(url, headers=self.headers, data=self.data_post_infinidat_share, verify=certifi.where())
         return result
 
-    @staticmethod
-    def post_infinidat_share(url):
-        result = requests.post(url, headers=HttpMethod.headers, data=HttpMethod.data_post_infinidat_share, verify=certifi.where())
-        return result
-
-    """=============================================================================================="""
-    @staticmethod
-    def delete(url):
-        result = requests.delete(url, headers=HttpMethod.headers, verify=certifi.where())
+    def delete(self, url):
+        result = requests.delete(url, headers=self.headers, verify=certifi.where())
         return result
