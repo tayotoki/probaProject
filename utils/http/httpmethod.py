@@ -5,7 +5,7 @@ from typing import Optional
 import certifi
 import requests
 
-from utils.config import configure_or_get_config
+from utils.config import get_config
 from .httpconfig import (
     DataPostNfsvmConfig,
     DataPatchNfsvmConfig,
@@ -42,7 +42,7 @@ class HttpMethod:
     @staticmethod
     def get_token():
         token = (
-            configure_or_get_config()
+            get_config()
             .get("jwt_token", "")
         )
         headers = {'Authorization': token}

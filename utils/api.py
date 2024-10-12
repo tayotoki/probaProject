@@ -5,7 +5,7 @@ from typing import Optional
 from requests import Response
 
 from tests.conftest import get_token
-from utils.config import configure_or_get_config
+from utils.config import get_config
 from utils.http.httpmethod import HttpMethod
 
 
@@ -60,7 +60,7 @@ class SuopApi:
         ID виртуальной машины
         :return: str
         """
-        return configure_or_get_config().get("virtual_machines_id")
+        return get_config().get("virtual_machines_id")
 
     def get_suop_clusters_id(self, get_token):
         return self._make_request(
