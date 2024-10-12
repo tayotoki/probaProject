@@ -1,8 +1,7 @@
 from .conftest import get_suop_api
 from utils.checking import Checking
-from utils.httpmethod import HttpMethod
 
-Suop_api = get_suop_api()
+suop_api = get_suop_api()
 
 
 def test_get_cluster(get_token):
@@ -11,7 +10,7 @@ def test_get_cluster(get_token):
     print("*****  Проверка авторизации  *****")
     print("Метод GET POST")
     print("кластер айди в самом тест_апи: " + get_token)
-    result_get = Suop_api.get_suop_clusters_id(get_token)
+    result_get = suop_api.get_suop_clusters_id(get_token)
     Checking.check_status_code(result_get, 200)
     Checking.check_json_token(result_get,
                               ['id', 'name', 'title', 'platform_id', 'kubernetes_id', 'control_planes_count',
@@ -27,7 +26,7 @@ def test_get_persistent_volumes(get_token):
     """ Тест-кейс persistent_volumes"""
 
     print("*****  Проверка получения persistent_volumes  *****")
-    result_get_persistent_volumes = Suop_api.get_suop_persistent_volumes(get_token)
+    result_get_persistent_volumes = suop_api.get_suop_persistent_volumes(get_token)
     Checking.check_status_code(result_get_persistent_volumes, 200)
     print(" -----------------------------------------------------------------------------------------------")
 
@@ -35,7 +34,7 @@ def test_get_persistent_volumes(get_token):
 """ Тест-кейс запрос platforms """
 def test_get_platforms():
     print("*****  Проверка получения записей platforms  *****")
-    result_get_platforms = Suop_api.get_suop_platforms()
+    result_get_platforms = suop_api.get_suop_platforms()
     Checking.check_status_code(result_get_platforms, 200)
     print(" -----------------------------------------------------------------------------------------------")
 
@@ -43,14 +42,14 @@ def test_get_platforms():
 """ Тест-кейс запрос записей notifications"""
 def test_get_notifications(get_token):
     print("*****  Проверка получения записей notifications  *****")
-    result_get_notifications = Suop_api.get_suop_notifications(get_token)
+    result_get_notifications = suop_api.get_suop_notifications(get_token)
     Checking.check_status_code(result_get_notifications, 200)
     print(" -----------------------------------------------------------------------------------------------")
 
 """ Тест-кейс monitoring services"""
 def test_get_monitoring_services(get_token):
     print("*****  Проверка получения кредов мониторинга  *****")
-    result_get_monitoring_services = Suop_api.get_suop_monitoring_services(get_token)
+    result_get_monitoring_services = suop_api.get_suop_monitoring_services(get_token)
     Checking.check_status_code(result_get_monitoring_services, 200)
     print(" -----------------------------------------------------------------------------------------------")
 

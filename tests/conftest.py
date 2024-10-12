@@ -2,7 +2,7 @@ import pytest
 import requests
 import certifi
 
-from utils.config import configure_or_get_config, is_config_exist, write_config_sections
+from utils.config import get_config, is_config_exist, write_config_sections
 
 HOST = "https://kuberpanel-be-test.dtln.cloud"
 
@@ -30,54 +30,57 @@ def configure_config() -> str:
 
     if is_config_exist():
         new_config_is_need = input(
-            "Найден прошлый файл конфигурации с данными для теста, хотите перезаписать конфигурацию? (Y/N)"
+            "Найден прошлый файл конфигурации с данными для теста, хотите перезаписать конфигурацию? (Y/N)\n"
         )
         match new_config_is_need:
             case "Y" | "y":
                 all_config_data = get_user_data()
             case "N" | "n":
-                old_config = configure_or_get_config()
+                old_config = get_config()
                 all_config_data = old_config
             case _:
-                print("Ответ не предусмотрен")
                 return configure_config()
     else:
-        print("Отработало отсутствие конфига")
         all_config_data = get_user_data()
 
-    # Авторизация
-    # headers = {"Content-Type": "application/json"}
-    # body = {
-    #     "username": all_config_data["auth"]["username"],
-    #     "password": all_config_data["auth"]["password"],
-    # }
-    # response_token = requests.post(
-    #     f'{HOST}/users/auth/login/',
-    #     headers=headers,
-    #     json=body,
-    #     verify=certifi.where(),
-    # )
+    if all((value.__class__ is str for value in all_config_data.values())):
+        username = all_config_data["username"]
+        password = all_config_data["password"]
+    else:
+        username = all_config_data["auth"]["username"]
+        password = all_config_data["auth"]["password"]
 
-    all_config_data.setdefault("jwt_token", {})["jwt_token"] = "HelloWorld"
+    # Авторизация
+    headers = {"Content-Type": "application/json"}
+    body = {
+        "username": username,
+        "password": password,
+    }
+    response_token = requests.post(
+        f'{HOST}/users/auth/login/',
+        headers=headers,
+        json=body,
+        verify=certifi.where(),
+    )
+
+    all_config_data.setdefault("jwt_token", {})["jwt_token"] = response_token.json().get("token", "")
     write_config_sections(all_config_data)
     return all_config_data["id"]["cluster_id"]
 
 
 @pytest.fixture(scope="session")
 def get_token():
-    print("Заюзана фикстура")
     from tests.constants import CLUSTER_ID
 
     cluster_id = CLUSTER_ID
-    print("Чо по кластеру - {}".format(cluster_id))
     return cluster_id
 
 
 def get_suop_api():
-    from utils.api import Suop_api
+    from utils.api import SuopApi
 
-    Suop_api = Suop_api()
-    return Suop_api
+    SuopApi = SuopApi()
+    return SuopApi
 
 
 

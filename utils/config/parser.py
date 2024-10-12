@@ -2,17 +2,7 @@ from configparser import ConfigParser
 from pathlib import Path
 from typing import Optional
 
-from settings import CONFIG_INI
-
-
-# Дефолтные секции в файле настроек
-default_sections: list[str] = [
-    "auth",
-    "id",
-    "t1_nfs_network",
-    "nfs_network",
-    "jwt_token",
-]
+from settings import CONFIG_INI, DEFAULT_CONFIG_SECTIONS
 
 
 class ConfigError(Exception):
@@ -33,10 +23,10 @@ def write_config_sections(sections_data: dict[str, dict], filename: Path = CONFI
         parser.write(config_file)
 
 
-def config(sections: Optional[list[str]] = None, filename: Path = CONFIG_INI):
+def _config(sections: Optional[list[str]] = None, filename: Path = CONFIG_INI):
     """Считывание файла конфигурации."""
 
-    sections = sections or default_sections
+    sections = sections or DEFAULT_CONFIG_SECTIONS
     parser = ConfigParser()
     parser.read(filename)
 
@@ -50,13 +40,12 @@ def config(sections: Optional[list[str]] = None, filename: Path = CONFIG_INI):
                 config_[param[0]] = param[1]
         else:
             raise ConfigError
-    print(config_)
     return config_
 
 
 def is_config_exist() -> bool:
-    return CONFIG_INI.is_file()
+    return CONFIG_INI.exists() and CONFIG_INI.is_file()
 
 
-def configure_or_get_config(sections: Optional[dict] = None) -> dict[str, str]:
-    return config()
+def get_config() -> dict[str, str]:
+    return _config()
